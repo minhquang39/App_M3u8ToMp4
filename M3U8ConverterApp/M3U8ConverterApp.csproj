@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <ApplicationIcon>..\Assets\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ffmpeg\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\Assets\icon.ico" Link="Assets\icon.ico" />
+    <Resource Include="..\Assets\vtv-digital-logo.png" Link="Assets\vtv-digital-logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ffmpeg\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
