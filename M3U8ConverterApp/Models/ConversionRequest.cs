@@ -7,9 +7,4 @@ internal sealed record ConversionRequest(
     string OutputFile,
     bool UseAggressiveHttp,
     string? Nm3u8DlRePath,
-    int? Nm3u8ThreadCount,
-    bool Nm3u8AutoSelect,
-    string? Nm3u8VideoSelection,
-    string? Nm3u8AudioSelection,
-    bool Nm3u8IncludeSubtitles,
-    string? Nm3u8SubtitleSelection);
+    int? Nm3u8ThreadCount);

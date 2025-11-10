@@ -36,11 +36,6 @@ internal sealed class MainWindowViewModel : BaseViewModel
     private string _progressDetails = string.Empty;
     private bool _useAggressiveHttp;
     private int _nm3u8ThreadCount = 16;
-    private bool _nm3u8AutoSelect = true;
-    private string _nm3u8VideoSelection = "best";
-    private string _nm3u8AudioSelection = "best";
-    private bool _nm3u8IncludeSubtitles;
-    private string _nm3u8SubtitleSelection = "all";
     private EngineOption _selectedEngineOption;
 
     public MainWindowViewModel(IConversionService conversionService, IDialogService dialogService, ISettingsService settingsService, IFfmpegLocator ffmpegLocator)
@@ -175,44 +170,6 @@ internal sealed class MainWindowViewModel : BaseViewModel
         }
     }
 
-    public bool Nm3u8AutoSelect
-    {
-        get => _nm3u8AutoSelect;
-        set
-        {
-            if (SetProperty(ref _nm3u8AutoSelect, value))
-            {
-                OnPropertyChanged(nameof(IsNm3u8ManualSelection));
-            }
-        }
-    }
-
-    public bool IsNm3u8ManualSelection => !Nm3u8AutoSelect;
-
-    public string Nm3u8VideoSelection
-    {
-        get => _nm3u8VideoSelection;
-        set => SetProperty(ref _nm3u8VideoSelection, string.IsNullOrWhiteSpace(value) ? "best" : value);
-    }
-
-    public string Nm3u8AudioSelection
-    {
-        get => _nm3u8AudioSelection;
-        set => SetProperty(ref _nm3u8AudioSelection, string.IsNullOrWhiteSpace(value) ? "best" : value);
-    }
-
-    public bool Nm3u8IncludeSubtitles
-    {
-        get => _nm3u8IncludeSubtitles;
-        set => SetProperty(ref _nm3u8IncludeSubtitles, value);
-    }
-
-    public string Nm3u8SubtitleSelection
-    {
-        get => _nm3u8SubtitleSelection;
-        set => SetProperty(ref _nm3u8SubtitleSelection, string.IsNullOrWhiteSpace(value) ? "all" : value);
-    }
-
     public string StatusMessage
     {
         get => _statusMessage;
@@ -253,11 +210,6 @@ internal sealed class MainWindowViewModel : BaseViewModel
         Nm3u8DlRePath = _settings.Nm3u8DlRePath ?? string.Empty;
         Nm3u8ThreadCount = _settings.Nm3u8ThreadCount > 0 ? _settings.Nm3u8ThreadCount : _nm3u8ThreadCount;
 
-        if (!string.IsNullOrWhiteSpace(_settings.LastUrl))
-        {
-            SourceUrl = _settings.LastUrl!;
-        }
-
         if (!string.IsNullOrWhiteSpace(_settings.LastOutputDirectory))
         {
             var suggestedName = BuildDefaultFileName(SourceUrl);
@@ -269,11 +221,6 @@ internal sealed class MainWindowViewModel : BaseViewModel
         }
 
         UseAggressiveHttp = _settings.UseAggressiveHttp;
-        Nm3u8AutoSelect = _settings.Nm3u8AutoSelect;
-        Nm3u8VideoSelection = string.IsNullOrWhiteSpace(_settings.Nm3u8VideoSelection) ? "best" : _settings.Nm3u8VideoSelection!;
-        Nm3u8AudioSelection = string.IsNullOrWhiteSpace(_settings.Nm3u8AudioSelection) ? "best" : _settings.Nm3u8AudioSelection!;
-        Nm3u8IncludeSubtitles = _settings.Nm3u8IncludeSubtitles;
-        Nm3u8SubtitleSelection = string.IsNullOrWhiteSpace(_settings.Nm3u8SubtitleSelection) ? "all" : _settings.Nm3u8SubtitleSelection!;
 
         SelectedEngineOption = EngineOptions.FirstOrDefault(option => option.Engine == _settings.PreferredEngine)
                                 ?? EngineOptions[0];
@@ -369,7 +316,6 @@ internal sealed class MainWindowViewModel : BaseViewModel
         ProgressPercent = 0;
         Logs.Clear();
 
-        _settings.LastUrl = SourceUrl;
         var outputDirectory = Path.GetDirectoryName(OutputPath);
         if (!string.IsNullOrWhiteSpace(outputDirectory))
         {
@@ -379,19 +325,11 @@ internal sealed class MainWindowViewModel : BaseViewModel
         _settings.Nm3u8DlRePath = string.IsNullOrWhiteSpace(Nm3u8DlRePath) ? null : Nm3u8DlRePath;
         _settings.UseAggressiveHttp = UseAggressiveHttp;
         _settings.Nm3u8ThreadCount = Nm3u8ThreadCount;
-        _settings.Nm3u8AutoSelect = Nm3u8AutoSelect;
-        _settings.Nm3u8VideoSelection = Nm3u8VideoSelection;
-        _settings.Nm3u8AudioSelection = Nm3u8AudioSelection;
-        _settings.Nm3u8IncludeSubtitles = Nm3u8IncludeSubtitles;
-        _settings.Nm3u8SubtitleSelection = Nm3u8SubtitleSelection;
         _settings.PreferredEngine = SelectedEngineOption.Engine;
         _settingsService.Save(_settings);
 
         _conversionCts = new CancellationTokenSource();
         var progress = new Progress<ConversionProgress>(OnProgressReport);
-        var videoSelection = (Nm3u8VideoSelection ?? string.Empty).Trim();
-        var audioSelection = (Nm3u8AudioSelection ?? string.Empty).Trim();
-        var subtitleSelection = (Nm3u8SubtitleSelection ?? string.Empty).Trim();
 
         try
         {
@@ -404,12 +342,7 @@ internal sealed class MainWindowViewModel : BaseViewModel
                     OutputPath.Trim(),
                     SelectedEngineOption.Engine == DownloadEngine.Ffmpeg && UseAggressiveHttp,
                     string.IsNullOrWhiteSpace(Nm3u8DlRePath) ? null : Nm3u8DlRePath,
-                    SelectedEngineOption.Engine == DownloadEngine.Nm3u8DlRe ? Nm3u8ThreadCount : null,
-                    Nm3u8AutoSelect,
-                    videoSelection,
-                    audioSelection,
-                    Nm3u8IncludeSubtitles,
-                    subtitleSelection),
+                    SelectedEngineOption.Engine == DownloadEngine.Nm3u8DlRe ? Nm3u8ThreadCount : null),
                 progress,
                 _conversionCts.Token).ConfigureAwait(true);
 
@@ -597,27 +530,6 @@ internal sealed class MainWindowViewModel : BaseViewModel
                     message = "FFmpeg is required to remux the downloaded stream into MP4.";
                     return false;
                 }
-
-                if (!Nm3u8AutoSelect)
-                {
-                    if (string.IsNullOrWhiteSpace(Nm3u8VideoSelection))
-                    {
-                        message = "Provide a video selection expression (e.g. best, res=\"1920*\", id=REGEX).";
-                        return false;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(Nm3u8AudioSelection))
-                    {
-                        message = "Provide an audio selection expression (e.g. best, lang=en, id=REGEX).";
-                        return false;
-                    }
-                }
-
-                if (Nm3u8IncludeSubtitles && string.IsNullOrWhiteSpace(Nm3u8SubtitleSelection))
-                {
-                    message = "Provide a subtitle selection expression (e.g. all, lang=en, name=REGEX).";
-                    return false;
-                }
                 break;
             default:
                 message = "Unsupported download engine.";
@@ -677,7 +589,6 @@ internal sealed class MainWindowViewModel : BaseViewModel
 
         AppendLog($"Link received from browser extension: {trimmedUrl}");
 
-        _settings.LastUrl = trimmedUrl;
         _settingsService.Save(_settings);
     }
 

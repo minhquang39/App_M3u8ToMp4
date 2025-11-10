@@ -138,71 +138,14 @@
             </StackPanel>
         </Grid>
 
-        <GroupBox Grid.Row="6"
-                  Header="N_m3u8DL-RE track selection"
-                  Visibility="{Binding IsNm3u8DlReSelected, Converter={StaticResource BoolToVisibilityConverter}}"
-                  Margin="0,0,0,12">
-            <StackPanel>
-                <CheckBox Content="Auto-select best available video/audio (recommended)"
-                          IsChecked="{Binding Nm3u8AutoSelect}"/>
-                <StackPanel Margin="0,8,0,0">
-                    <Grid Margin="0,0,0,8"
-                          IsEnabled="{Binding IsNm3u8ManualSelection}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Video selection:" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBox Grid.Column="1"
-                                 Text="{Binding Nm3u8VideoSelection, UpdateSourceTrigger=PropertyChanged}"
-                                 VerticalContentAlignment="Center"
-                                 ToolTip="Expression passed to --select-video (e.g. best, res=&quot;1920*1080&quot;, id=REGEX...)."/>
-                    </Grid>
-                    <Grid Margin="0,0,0,8"
-                          IsEnabled="{Binding IsNm3u8ManualSelection}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Audio selection:" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBox Grid.Column="1"
-                                 Text="{Binding Nm3u8AudioSelection, UpdateSourceTrigger=PropertyChanged}"
-                                 VerticalContentAlignment="Center"
-                                 ToolTip="Expression passed to --select-audio (e.g. best, lang=en, id=REGEX...)."/>
-                    </Grid>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                        <CheckBox Content="Download subtitles"
-                                  IsChecked="{Binding Nm3u8IncludeSubtitles}"/>
-                        <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="Gray" FontSize="11"
-                                   Text="Uses --select-subtitle (default 'all')."/>
-                    </StackPanel>
-                    <Grid IsEnabled="{Binding Nm3u8IncludeSubtitles}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Subtitle selection:" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBox Grid.Column="1"
-                                 Text="{Binding Nm3u8SubtitleSelection, UpdateSourceTrigger=PropertyChanged}"
-                                 VerticalContentAlignment="Center"
-                                 ToolTip="Expression passed to --select-subtitle (e.g. all, lang=en, name=REGEX...)."/>
-                    </Grid>
-                </StackPanel>
-                <TextBlock Margin="0,8,0,0"
-                           Foreground="Gray"
-                           FontSize="11"
-                           Text="Selection syntax follows N_m3u8DL-RE options (see --morehelp select-video/audio/subtitle)."/>
-            </StackPanel>
-        </GroupBox>
-
-        <CheckBox Grid.Row="7"
+        <CheckBox Grid.Row="6"
                   Content="Aggressive HTTP (persistent &amp; multiple requests for VOD)"
                   IsChecked="{Binding UseAggressiveHttp}"
                   Margin="0,0,0,12"
                   IsEnabled="{Binding IsFfmpegSelected}"
                   ToolTip="Adds -multiple_requests 1 and -http_persistent 1 to ffmpeg to reuse HTTP connections."/>
 
-        <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,12">
+        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,12">
             <Button Content="Start"
                     MinWidth="100"
                     Command="{Binding StartCommand}"
@@ -218,7 +161,7 @@
                     Command="{Binding OpenOutputFolderCommand}"/>
         </StackPanel>
 
-        <Grid Grid.Row="9" Margin="0,0,0,12">
+        <Grid Grid.Row="8" Margin="0,0,0,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -232,18 +175,25 @@
             </StackPanel>
         </Grid>
 
-        <GroupBox Grid.Row="10" Header="Activity log">
+        <GroupBox Grid.Row="9" Header="Activity log">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <ListBox ItemsSource="{Binding Logs}" FontFamily="Consolas" FontSize="12"/>
-                <TextBlock Grid.Row="1"
-                           Margin="0,4,0,0"
-                           Foreground="Gray"
-                           FontSize="11"
-                           Text="Progress is parsed from ffmpeg output and may lag behind actual completion slightly."/>
+                <ScrollViewer x:Name="ActivityLogScrollViewer"
+                              VerticalScrollBarVisibility="Visible"
+                              HorizontalScrollBarVisibility="Auto"
+                              ScrollChanged="ActivityLogScroll_OnScrollChanged"
+                              PreviewMouseWheel="ActivityLogScroll_OnPreviewMouseWheel">
+                    <ListBox x:Name="ActivityLogList"
+                             ItemsSource="{Binding Logs}"
+                             FontFamily="Consolas"
+                             FontSize="12"
+                             ScrollViewer.CanContentScroll="True"
+                             />
+                </ScrollViewer>
+               
             </Grid>
         </GroupBox>
     </Grid>

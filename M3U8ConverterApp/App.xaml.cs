@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using M3U8ConverterApp.Interop;
 
 namespace M3U8ConverterApp;
 
@@ -13,6 +14,34 @@ public partial class App : Application
         DispatcherUnhandledException += OnDispatcherUnhandledException;
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
         TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+    }
+
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
+
+        var pipeName = NativeBridgeServer.DefaultPipeName;
+
+        foreach (var arg in e.Args)
+        {
+            if (string.IsNullOrWhiteSpace(arg))
+            {
+                continue;
+            }
+
+            if (arg.StartsWith("--pipe=", StringComparison.OrdinalIgnoreCase))
+            {
+                var value = arg.Substring("--pipe=".Length).Trim();
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    pipeName = value;
+                }
+            }
+        }
+
+        var window = new MainWindow(pipeName);
+        MainWindow = window;
+        window.Show();
     }
 
     private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

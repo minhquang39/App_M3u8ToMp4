@@ -318,28 +318,13 @@ internal sealed class ConversionService : IConversionService
             args.Add(request.Nm3u8ThreadCount.Value.ToString(CultureInfo.InvariantCulture));
         }
 
-        var videoSelection = request.Nm3u8AutoSelect
-            ? "best"
-            : string.IsNullOrWhiteSpace(request.Nm3u8VideoSelection) ? "best" : request.Nm3u8VideoSelection!;
-        var audioSelection = request.Nm3u8AutoSelect
-            ? "best"
-            : string.IsNullOrWhiteSpace(request.Nm3u8AudioSelection) ? "best" : request.Nm3u8AudioSelection!;
+        args.Add("--auto-select");
         args.Add("--select-video");
-        args.Add(videoSelection);
+        args.Add("best");
         args.Add("--select-audio");
-        args.Add(audioSelection);
-
-        if (request.Nm3u8AutoSelect)
-        {
-            args.Add("--auto-select");
-        }
-
-        if (request.Nm3u8IncludeSubtitles)
-        {
-            var subtitleSelection = string.IsNullOrWhiteSpace(request.Nm3u8SubtitleSelection) ? "all" : request.Nm3u8SubtitleSelection!;
-            args.Add("--select-subtitle");
-            args.Add(subtitleSelection);
-        }
+        args.Add("best");
+        args.Add("--select-subtitle");
+        args.Add("none");
 
         return startInfo;
     }

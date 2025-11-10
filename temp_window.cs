@@ -2,8 +2,6 @@ using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using M3U8ConverterApp.Interop;
 using M3U8ConverterApp.Services;
 using M3U8ConverterApp.ViewModels;
@@ -14,13 +12,8 @@ public partial class MainWindow : Window
 {
     private readonly MainWindowViewModel _viewModel;
     private readonly NativeBridgeServer? _bridgeServer;
-    private bool _logAutoScroll = true;
 
-    public MainWindow() : this(NativeBridgeServer.DefaultPipeName)
-    {
-    }
-
-    public MainWindow(string pipeName)
+    public MainWindow()
     {
         InitializeComponent();
 
@@ -37,8 +30,7 @@ public partial class MainWindow : Window
             logs.CollectionChanged += OnLogsCollectionChanged;
         }
 
-        var pipe = string.IsNullOrWhiteSpace(pipeName) ? NativeBridgeServer.DefaultPipeName : pipeName;
-        _bridgeServer = new NativeBridgeServer(pipe, HandleNativeRequestAsync);
+        _bridgeServer = new NativeBridgeServer("m3u8_converter_bridge", HandleNativeRequestAsync);
     }
 
     private async Task<NativeBridgeResponse> HandleNativeRequestAsync(NativeBridgeRequest request)
@@ -60,6 +52,7 @@ public partial class MainWindow : Window
                 request.TabTitle,
                 request.PageUrl,
                 request.DetectedAt);
+
             BringToForeground();
         });
 
@@ -68,43 +61,10 @@ public partial class MainWindow : Window
 
     private void OnLogsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.Action != NotifyCollectionChangedAction.Add || !_logAutoScroll)
+        if (e.Action == NotifyCollectionChangedAction.Add && ActivityLogList.Items.Count > 0)
         {
-            return;
-        }
-
-        Dispatcher.BeginInvoke(new Action(() =>
-        {
-            if (ActivityLogList.Items.Count == 0)
-            {
-                return;
-            }
-
             var lastItem = ActivityLogList.Items[^1];
             ActivityLogList.ScrollIntoView(lastItem);
-        }), System.Windows.Threading.DispatcherPriority.Background);
-    }
-
-    private void ActivityLogScroll_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
-    {
-        if (sender is ScrollViewer viewer)
-        {
-            viewer.ScrollToVerticalOffset(viewer.VerticalOffset - e.Delta);
-            e.Handled = true;
-        }
-    }
-
-    private void ActivityLogScroll_OnScrollChanged(object sender, ScrollChangedEventArgs e)
-    {
-        if (sender is ScrollViewer viewer)
-        {
-            if (viewer.ScrollableHeight <= 0)
-            {
-                _logAutoScroll = true;
-                return;
-            }
-
-            _logAutoScroll = viewer.VerticalOffset >= viewer.ScrollableHeight - 1;
         }
     }
 
