@@ -400,11 +400,19 @@ internal sealed class MainWindowViewModel : BaseViewModel
 
         if (progress.TotalDuration.HasValue && progress.ProcessedDuration.HasValue)
         {
-            ProgressDetails = $"{FormatTime(progress.ProcessedDuration.Value)} / {FormatTime(progress.TotalDuration.Value)}";
+            ProgressDetails = progress.Percentage.HasValue 
+                ? $"{FormatTime(progress.ProcessedDuration.Value)} / {FormatTime(progress.TotalDuration.Value)} ({progress.Percentage.Value:F1}%)"
+                : $"{FormatTime(progress.ProcessedDuration.Value)} / {FormatTime(progress.TotalDuration.Value)}";
         }
         else if (progress.ProcessedDuration.HasValue)
         {
-            ProgressDetails = $"{FormatTime(progress.ProcessedDuration.Value)} processed";
+            ProgressDetails = progress.Percentage.HasValue
+                ? $"{FormatTime(progress.ProcessedDuration.Value)} processed ({progress.Percentage.Value:F1}%)"
+                : $"{FormatTime(progress.ProcessedDuration.Value)} processed";
+        }
+        else if (progress.Percentage.HasValue)
+        {
+            ProgressDetails = $"{progress.Percentage.Value:F1}% completed";
         }
     }
 

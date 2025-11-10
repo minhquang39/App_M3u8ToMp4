@@ -68,41 +68,45 @@ public partial class MainWindow : Window
 
     private void OnLogsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.Action != NotifyCollectionChangedAction.Add)
-        {
-            return;
-        }
-
-        // Chỉ auto-scroll nếu enabled
-        if (!_autoScrollEnabled)
+        if (e.Action != NotifyCollectionChangedAction.Add || !_autoScrollEnabled)
         {
             return;
         }
 
         Dispatcher.BeginInvoke(new Action(() =>
         {
-            if (ActivityLogList.Items.Count == 0)
+            if (ActivityLogList.Items.Count > 0)
             {
-                return;
+                ActivityLogList.ScrollIntoView(ActivityLogList.Items[^1]);
             }
-
-            var lastItem = ActivityLogList.Items[^1];
-            ActivityLogList.ScrollIntoView(lastItem);
-            
-            // Sau khi scroll, check xem user có ở cuối không
-            CheckScrollPosition();
         }), System.Windows.Threading.DispatcherPriority.Background);
     }
 
-    private void CheckScrollPosition()
+    private void ActivityLogList_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
-        // Tìm ScrollViewer bên trong ListBox
+        if (e.VerticalChange == 0) return;
+
         var scrollViewer = FindVisualChild<ScrollViewer>(ActivityLogList);
         if (scrollViewer != null)
         {
-            // Nếu user scroll lên (không ở cuối), tắt auto-scroll
             _autoScrollEnabled = scrollViewer.VerticalOffset >= scrollViewer.ScrollableHeight - 1;
         }
+    }
+
+    private void ActivityLogList_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        _autoScrollEnabled = false;
+        Task.Delay(2000).ContinueWith(_ =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                var scrollViewer = FindVisualChild<ScrollViewer>(ActivityLogList);
+                if (scrollViewer != null)
+                {
+                    _autoScrollEnabled = scrollViewer.VerticalOffset >= scrollViewer.ScrollableHeight - 1;
+                }
+            });
+        });
     }
 
     private static T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
@@ -112,33 +116,12 @@ public partial class MainWindow : Window
             var child = System.Windows.Media.VisualTreeHelper.GetChild(parent, i);
             if (child is T result)
                 return result;
-            
+
             var childOfChild = FindVisualChild<T>(child);
             if (childOfChild != null)
                 return childOfChild;
         }
         return null;
-    }
-
-    private void ActivityLogList_ScrollChanged(object sender, ScrollChangedEventArgs e)
-    {
-        // Khi user scroll, check xem còn ở cuối không
-        if (e.VerticalChange != 0)
-        {
-            CheckScrollPosition();
-        }
-    }
-
-    private void ActivityLogList_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-    {
-        // Khi user dùng wheel, tạm tắt auto-scroll
-        _autoScrollEnabled = false;
-        
-        // Sau 2 giây không scroll, bật lại auto-scroll nếu ở cuối
-        Task.Delay(2000).ContinueWith(_ =>
-        {
-            Dispatcher.Invoke(() => CheckScrollPosition());
-        });
     }
 
     private void BringToForeground()

@@ -21,6 +21,7 @@ internal sealed class ConversionService : IConversionService
 {
     private static readonly Regex DurationRegex = new(@"Duration:\s(?<h>\d{2}):(?<m>\d{2}):(?<s>\d{2}(?:\.\d+)?)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
     private static readonly Regex TimeRegex = new(@"time=(?<h>\d{2}):(?<m>\d{2}):(?<s>\d{2}(?:\.\d+)?)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+    private static readonly Regex Nm3u8PercentageRegex = new(@"(?<percent>\d+(?:\.\d+)?)\s*%", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     public Task ConvertAsync(ConversionRequest request, IProgress<ConversionProgress>? progress, CancellationToken cancellationToken)
     {
@@ -340,7 +341,8 @@ internal sealed class ConversionService : IConversionService
                 continue;
             }
 
-            progress?.Report(new ConversionProgress(line, null, null, null));
+            var percentage = TryParseNm3u8Percentage(line);
+            progress?.Report(new ConversionProgress(line, null, null, percentage));
         }
     }
 
@@ -480,6 +482,22 @@ internal sealed class ConversionService : IConversionService
         var seconds = double.Parse(match.Groups["s"].Value, CultureInfo.InvariantCulture);
 
         return TimeSpan.FromHours(hours) + TimeSpan.FromMinutes(minutes) + TimeSpan.FromSeconds(seconds);
+    }
+
+    private static double? TryParseNm3u8Percentage(string input)
+    {
+        var match = Nm3u8PercentageRegex.Match(input);
+        if (!match.Success)
+        {
+            return null;
+        }
+
+        if (double.TryParse(match.Groups["percent"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+        {
+            return Math.Clamp(value, 0d, 100d);
+        }
+
+        return null;
     }
 
     private static void TryDeleteDirectory(string path)
