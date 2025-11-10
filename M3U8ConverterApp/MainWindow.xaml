@@ -175,26 +175,14 @@
             </StackPanel>
         </Grid>
 
-        <GroupBox Grid.Row="9" Header="Activity log">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <ScrollViewer x:Name="ActivityLogScrollViewer"
-                              VerticalScrollBarVisibility="Visible"
-                              HorizontalScrollBarVisibility="Auto"
-                              ScrollChanged="ActivityLogScroll_OnScrollChanged"
-                              PreviewMouseWheel="ActivityLogScroll_OnPreviewMouseWheel">
-                    <ListBox x:Name="ActivityLogList"
-                             ItemsSource="{Binding Logs}"
-                             FontFamily="Consolas"
-                             FontSize="12"
-                             ScrollViewer.CanContentScroll="True"
-                             />
-                </ScrollViewer>
-               
-            </Grid>
+        <GroupBox Grid.Row="10" Header="Activity log">
+            <ListBox x:Name="ActivityLogList"
+                     ItemsSource="{Binding Logs}"
+                     FontFamily="Consolas"
+                     FontSize="12"
+                     ScrollViewer.VerticalScrollBarVisibility="Visible"
+                     ScrollViewer.ScrollChanged="ActivityLogList_ScrollChanged"
+                     PreviewMouseWheel="ActivityLogList_PreviewMouseWheel"/>
         </GroupBox>
     </Grid>
 </Window>

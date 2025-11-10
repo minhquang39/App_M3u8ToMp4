@@ -37,6 +37,7 @@ internal sealed class MainWindowViewModel : BaseViewModel
     private bool _useAggressiveHttp;
     private int _nm3u8ThreadCount = 16;
     private EngineOption _selectedEngineOption;
+    private string? _externalTabTitle;
 
     public MainWindowViewModel(IConversionService conversionService, IDialogService dialogService, ISettingsService settingsService, IFfmpegLocator ffmpegLocator)
     {
@@ -212,7 +213,7 @@ internal sealed class MainWindowViewModel : BaseViewModel
 
         if (!string.IsNullOrWhiteSpace(_settings.LastOutputDirectory))
         {
-            var suggestedName = BuildDefaultFileName(SourceUrl);
+            var suggestedName = BuildDefaultFileName(SourceUrl, _externalTabTitle);
             OutputPath = Path.Combine(_settings.LastOutputDirectory!, suggestedName);
         }
         else
@@ -244,12 +245,19 @@ internal sealed class MainWindowViewModel : BaseViewModel
             directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         }
 
-        var fileName = BuildDefaultFileName(SourceUrl);
+        var fileName = BuildDefaultFileName(SourceUrl, _externalTabTitle);
         OutputPath = Path.Combine(directory ?? string.Empty, fileName);
     }
 
-    private static string BuildDefaultFileName(string? url)
+    private static string BuildDefaultFileName(string? url, string? tabTitle = null)
     {
+        // Ưu tiên sử dụng tabTitle từ extension nếu có
+        if (!string.IsNullOrWhiteSpace(tabTitle))
+        {
+            return $"{Sanitize(tabTitle.Trim())}.mp4";
+        }
+
+        // Fallback: Dùng URL như trước
         if (string.IsNullOrWhiteSpace(url))
         {
             return $"video_{DateTime.Now:yyyyMMdd_HHmmss}.mp4";
@@ -562,8 +570,16 @@ internal sealed class MainWindowViewModel : BaseViewModel
         }
 
         var trimmedUrl = url.Trim();
-        OutputPath = string.Empty;
+        
+        // Lưu tabTitle để dùng cho việc đặt tên file
+        _externalTabTitle = tabTitle;
+        
+        // Set SourceUrl trước để có URL cho BuildDefaultFileName
         SourceUrl = trimmedUrl;
+        
+        // Force suggest output path với tabTitle mới
+        _outputPath = string.Empty;
+        SuggestOutputPath();
 
         var display = !string.IsNullOrWhiteSpace(tabTitle)
             ? tabTitle
