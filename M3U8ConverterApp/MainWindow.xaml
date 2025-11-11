@@ -10,179 +10,222 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Margin="0,0,0,12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="110"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="M3U8 URL:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBox Grid.Column="1"
-                     Text="{Binding SourceUrl, UpdateSourceTrigger=PropertyChanged}"
-                     ToolTip="Remote playlist URL (.m3u8)"
-                     VerticalContentAlignment="Center" />
-            <Button Grid.Column="2"
-                    Margin="8,0,0,0"
-                    Padding="12 4"
-                    Content="Paste"
-                    Command="{Binding PasteUrlCommand}"
-                    ToolTip="Paste URL from clipboard"/>
-        </Grid>
+    <TabControl Margin="8">
+        <!-- Tab 1: Conversion -->
+        <TabItem Header="Conversion">
+            <Grid Margin="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1" Margin="0,0,0,12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="110"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Output file:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBox Grid.Column="1"
-                     Text="{Binding OutputPath, UpdateSourceTrigger=PropertyChanged}"
-                     VerticalContentAlignment="Center"
-                     ToolTip="Destination MP4 path"/>
-            <Button Grid.Column="2"
-                    Margin="8,0,0,0"
-                    Padding="12 4"
-                    Content="Browse..."
-                    Command="{Binding BrowseOutputCommand}"/>
-        </Grid>
+                <!-- M3U8 URL -->
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="M3U8 URL:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Grid.Column="1"
+                             Text="{Binding SourceUrl, UpdateSourceTrigger=PropertyChanged}"
+                             ToolTip="Remote playlist URL (.m3u8)"
+                             VerticalContentAlignment="Center" />
+                    <Button Grid.Column="2"
+                            Margin="8,0,0,0"
+                            Padding="12 4"
+                            Content="Paste"
+                            Command="{Binding PasteUrlCommand}"
+                            ToolTip="Paste URL from clipboard"/>
+                </Grid>
 
-        <Grid Grid.Row="2" Margin="0,0,0,12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="110"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Downloader:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <StackPanel Grid.Column="1">
-                <ComboBox ItemsSource="{Binding EngineOptions}"
-                          SelectedItem="{Binding SelectedEngineOption}"
-                          DisplayMemberPath="DisplayName"
-                          Margin="0,0,0,4"
-                          MinHeight="28"/>
-                <TextBlock Text="{Binding SelectedEngineOption.Description}"
-                           Foreground="Gray"
+                <!-- Output file -->
+                <Grid Grid.Row="1" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Output file:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Grid.Column="1"
+                             Text="{Binding OutputPath, UpdateSourceTrigger=PropertyChanged}"
+                             VerticalContentAlignment="Center"
+                             ToolTip="Destination MP4 path"/>
+                    <Button Grid.Column="2"
+                            Margin="8,0,0,0"
+                            Padding="12 4"
+                            Content="Browse..."
+                            Command="{Binding BrowseOutputCommand}"/>
+                </Grid>
+
+                <!-- Downloader -->
+                <Grid Grid.Row="2" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Downloader:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <StackPanel Grid.Column="1">
+                        <ComboBox ItemsSource="{Binding EngineOptions}"
+                                  SelectedItem="{Binding SelectedEngineOption}"
+                                  DisplayMemberPath="DisplayName"
+                                  Margin="0,0,0,4"
+                                  MinHeight="28"/>
+                        <TextBlock Text="{Binding SelectedEngineOption.Description}"
+                                   Foreground="Gray"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Control buttons -->
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,12">
+                    <Button Content="Start"
+                            MinWidth="100"
+                            Command="{Binding StartCommand}"
+                            IsDefault="True"
+                            Margin="0,0,8,0"/>
+                    <Button Content="Cancel"
+                            MinWidth="100"
+                            Command="{Binding CancelCommand}"
+                            IsEnabled="{Binding IsBusy}"
+                            Margin="0,0,8,0"/>
+                    <Button Content="Open output folder"
+                            MinWidth="150"
+                            Command="{Binding OpenOutputFolderCommand}"/>
+                </StackPanel>
+
+                <!-- Progress bar -->
+                <Grid Grid.Row="4" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ProgressBar Height="20"
+                                 Value="{Binding ProgressPercent, Mode=OneWay}"
+                                 Maximum="100"/>
+                    <StackPanel Grid.Column="1" Orientation="Vertical" Margin="12,0,0,0">
+                        <TextBlock Text="{Binding StatusMessage}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding ProgressDetails}" FontSize="11" Foreground="Gray"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Activity log -->
+                <GroupBox Grid.Row="5" Header="Activity log">
+                    <ListBox x:Name="ActivityLogList"
+                             ItemsSource="{Binding Logs}"
+                             FontFamily="Consolas"
+                             FontSize="12"
+                             ScrollViewer.VerticalScrollBarVisibility="Visible"
+                             ScrollViewer.ScrollChanged="ActivityLogList_ScrollChanged"
+                             PreviewMouseWheel="ActivityLogList_PreviewMouseWheel"/>
+                </GroupBox>
+            </Grid>
+        </TabItem>
+
+        <!-- Tab 2: Settings -->
+        <TabItem Header="Settings">
+            <Grid Margin="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- FFmpeg path -->
+                <GroupBox Header="FFmpeg Configuration" Margin="0,0,0,12">
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="FFmpeg path:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding FfmpegPath, UpdateSourceTrigger=PropertyChanged}"
+                                     VerticalContentAlignment="Center"
+                                     ToolTip="Location of ffmpeg.exe"/>
+                            <Button Grid.Column="2"
+                                    Margin="8,0,0,0"
+                                    Padding="12 4"
+                                    Content="Browse..."
+                                    Command="{Binding BrowseFfmpegCommand}"/>
+                        </Grid>
+
+                        <CheckBox Grid.Row="1"
+                                  Content="Aggressive HTTP (persistent &amp; multiple requests for VOD)"
+                                  IsChecked="{Binding UseAggressiveHttp}"
+                                  IsEnabled="{Binding IsFfmpegSelected}"
+                                  ToolTip="Adds -multiple_requests 1 and -http_persistent 1 to ffmpeg to reuse HTTP connections."/>
+                    </Grid>
+                </GroupBox>
+
+                <!-- N_m3u8DL-RE Configuration -->
+                <GroupBox Grid.Row="1" Header="N_m3u8DL-RE Configuration" Margin="0,0,0,12">
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Margin="0,0,0,12" IsEnabled="{Binding IsNm3u8DlReSelected}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="N_m3u8DL-RE path:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding Nm3u8DlRePath, UpdateSourceTrigger=PropertyChanged}"
+                                     VerticalContentAlignment="Center"
+                                     ToolTip="Location of N_m3u8DL-RE.exe"/>
+                            <Button Grid.Column="2"
+                                    Margin="8,0,0,0"
+                                    Padding="12 4"
+                                    Content="Browse..."
+                                    Command="{Binding BrowseNm3u8Command}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1" IsEnabled="{Binding IsNm3u8DlReSelected}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Thread count:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBox Width="80"
+                                         Text="{Binding Nm3u8ThreadCount, UpdateSourceTrigger=PropertyChanged}"
+                                         VerticalContentAlignment="Center"
+                                         ToolTip="Maximum number of segments to download concurrently (1-128)."/>
+                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="Gray" FontSize="11"
+                                           Text="Higher values increase concurrency but may stress the server."/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+
+                <!-- Info text -->
+                <TextBlock Grid.Row="2" 
+                           TextWrapping="Wrap" 
+                           Foreground="Gray" 
                            FontSize="11"
-                           TextWrapping="Wrap"/>
-            </StackPanel>
-        </Grid>
-
-        <Grid Grid.Row="3" Margin="0,0,0,12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="110"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="FFmpeg path:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBox Grid.Column="1"
-                     Text="{Binding FfmpegPath, UpdateSourceTrigger=PropertyChanged}"
-                     VerticalContentAlignment="Center"
-                     ToolTip="Location of ffmpeg.exe"/>
-            <Button Grid.Column="2"
-                    Margin="8,0,0,0"
-                    Padding="12 4"
-                    Content="Browse..."
-                    Command="{Binding BrowseFfmpegCommand}"/>
-        </Grid>
-
-        <Grid Grid.Row="4" Margin="0,0,0,12" IsEnabled="{Binding IsNm3u8DlReSelected}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="110"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="N_m3u8DL-RE path:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBox Grid.Column="1"
-                     Text="{Binding Nm3u8DlRePath, UpdateSourceTrigger=PropertyChanged}"
-                     VerticalContentAlignment="Center"
-                     ToolTip="Location of N_m3u8DL-RE.exe"/>
-            <Button Grid.Column="2"
-                    Margin="8,0,0,0"
-                    Padding="12 4"
-                    Content="Browse..."
-                    Command="{Binding BrowseNm3u8Command}"/>
-        </Grid>
-
-        <Grid Grid.Row="5"
-              Margin="0,0,0,12"
-              IsEnabled="{Binding IsNm3u8DlReSelected}"
-              Visibility="{Binding IsNm3u8DlReSelected, Converter={StaticResource BoolToVisibilityConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="110"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Thread count:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBox Width="80"
-                         Text="{Binding Nm3u8ThreadCount, UpdateSourceTrigger=PropertyChanged}"
-                         VerticalContentAlignment="Center"
-                         ToolTip="Maximum number of segments to download concurrently (1-128)."/>
-                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="Gray" FontSize="11"
-                           Text="Higher values increase concurrency but may stress the server."/>
-            </StackPanel>
-        </Grid>
-
-        <CheckBox Grid.Row="6"
-                  Content="Aggressive HTTP (persistent &amp; multiple requests for VOD)"
-                  IsChecked="{Binding UseAggressiveHttp}"
-                  Margin="0,0,0,12"
-                  IsEnabled="{Binding IsFfmpegSelected}"
-                  ToolTip="Adds -multiple_requests 1 and -http_persistent 1 to ffmpeg to reuse HTTP connections."/>
-
-        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,12">
-            <Button Content="Start"
-                    MinWidth="100"
-                    Command="{Binding StartCommand}"
-                    IsDefault="True"
-                    Margin="0,0,8,0"/>
-            <Button Content="Cancel"
-                    MinWidth="100"
-                    Command="{Binding CancelCommand}"
-                    IsEnabled="{Binding IsBusy}"
-                    Margin="0,0,8,0"/>
-            <Button Content="Open output folder"
-                    MinWidth="150"
-                    Command="{Binding OpenOutputFolderCommand}"/>
-        </StackPanel>
-
-        <Grid Grid.Row="8" Margin="0,0,0,12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <ProgressBar Height="20"
-                         Value="{Binding ProgressPercent, Mode=OneWay}"
-                         Maximum="100"/>
-            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="12,0,0,0">
-                <TextBlock Text="{Binding StatusMessage}" FontWeight="Bold"/>
-                <TextBlock Text="{Binding ProgressDetails}" FontSize="11" Foreground="Gray"/>
-            </StackPanel>
-        </Grid>
-
-        <GroupBox Grid.Row="10" Header="Activity log">
-            <ListBox x:Name="ActivityLogList"
-                     ItemsSource="{Binding Logs}"
-                     FontFamily="Consolas"
-                     FontSize="12"
-                     ScrollViewer.VerticalScrollBarVisibility="Visible"
-                     ScrollViewer.ScrollChanged="ActivityLogList_ScrollChanged"
-                     PreviewMouseWheel="ActivityLogList_PreviewMouseWheel"/>
-        </GroupBox>
-    </Grid>
+                           Margin="0,8,0,0">
+                    <Run Text="Note: "/>
+                    <Run Text="FFmpeg is required for both download methods. N_m3u8DL-RE path is only needed when using parallel download mode."/>
+                </TextBlock>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>

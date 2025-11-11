@@ -14,7 +14,9 @@ public partial class MainWindow : Window
 {
     private readonly MainWindowViewModel _viewModel;
     private readonly NativeBridgeServer? _bridgeServer;
+    private readonly TrayIconManager _trayIconManager;
     private bool _autoScrollEnabled = true;
+    private bool _isExiting = false;
 
     public MainWindow() : this(NativeBridgeServer.DefaultPipeName)
     {
@@ -39,6 +41,11 @@ public partial class MainWindow : Window
 
         var pipe = string.IsNullOrWhiteSpace(pipeName) ? NativeBridgeServer.DefaultPipeName : pipeName;
         _bridgeServer = new NativeBridgeServer(pipe, HandleNativeRequestAsync);
+
+        _trayIconManager = new TrayIconManager(this);
+        
+        // Handle window closing event
+        Closing += OnWindowClosing;
     }
 
     private async Task<NativeBridgeResponse> HandleNativeRequestAsync(NativeBridgeRequest request)
@@ -64,6 +71,15 @@ public partial class MainWindow : Window
         });
 
         return NativeBridgeResponse.Success("Link applied.");
+    }
+
+    private void OnWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        if (!_isExiting)
+        {
+            e.Cancel = true;
+            _trayIconManager.HideWindow();
+        }
     }
 
     private void OnLogsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -126,6 +142,12 @@ public partial class MainWindow : Window
 
     private void BringToForeground()
     {
+        if (!IsVisible)
+        {
+            _trayIconManager.ShowWindow();
+            return;
+        }
+
         if (WindowState == WindowState.Minimized)
         {
             WindowState = WindowState.Normal;
@@ -136,6 +158,12 @@ public partial class MainWindow : Window
         Topmost = false;
     }
 
+    public void ExitApplication()
+    {
+        _isExiting = true;
+        Close();
+    }
+
     protected override void OnClosed(EventArgs e)
     {
         if (_viewModel.Logs is INotifyCollectionChanged logs)
@@ -143,6 +171,7 @@ public partial class MainWindow : Window
             logs.CollectionChanged -= OnLogsCollectionChanged;
         }
 
+        _trayIconManager?.Dispose();
         _bridgeServer?.Dispose();
         base.OnClosed(e);
     }
