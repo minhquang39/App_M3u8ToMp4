@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <!-- Window Title -->
+  <data name="WindowTitle" xml:space="preserve">
+    <value>M3U8 to MP4 Converter</value>
+  </data>
+  
+  <!-- Tabs -->
+  <data name="Tab_Conversion" xml:space="preserve">
+    <value>Conversion</value>
+  </data>
+  <data name="Tab_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  
+  <!-- Labels -->
+  <data name="Label_M3U8Url" xml:space="preserve">
+    <value>M3U8 URL:</value>
+  </data>
+  <data name="Label_OutputFile" xml:space="preserve">
+    <value>Output file:</value>
+  </data>
+  <data name="Label_Downloader" xml:space="preserve">
+    <value>Downloader:</value>
+  </data>
+  <data name="Label_FfmpegPath" xml:space="preserve">
+    <value>FFmpeg path:</value>
+  </data>
+  <data name="Label_Nm3u8DlRePath" xml:space="preserve">
+    <value>N_m3u8DL-RE path:</value>
+  </data>
+  <data name="Label_ThreadCount" xml:space="preserve">
+    <value>Thread count:</value>
+  </data>
+  <data name="Label_Language" xml:space="preserve">
+    <value>Language:</value>
+  </data>
+  
+  <!-- Buttons -->
+  <data name="Button_Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="Button_Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="Button_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Button_OpenOutputFolder" xml:space="preserve">
+    <value>Open output folder</value>
+  </data>
+  
+  <!-- Checkboxes -->
+  <data name="Checkbox_AggressiveHttp" xml:space="preserve">
+    <value>Aggressive HTTP (persistent &amp; multiple requests for VOD)</value>
+  </data>
+  
+  <!-- GroupBox Headers -->
+  <data name="GroupBox_ActivityLog" xml:space="preserve">
+    <value>Activity log</value>
+  </data>
+  <data name="GroupBox_FfmpegConfiguration" xml:space="preserve">
+    <value>FFmpeg Configuration</value>
+  </data>
+  <data name="GroupBox_Nm3u8Configuration" xml:space="preserve">
+    <value>N_m3u8DL-RE Configuration</value>
+  </data>
+  
+  <!-- Engine Options -->
+  <data name="Engine_Ffmpeg_Name" xml:space="preserve">
+    <value>FFmpeg (sequential)</value>
+  </data>
+  <data name="Engine_Ffmpeg_Description" xml:space="preserve">
+    <value>Use ffmpeg to download sequentially.</value>
+  </data>
+  <data name="Engine_Nm3u8_Name" xml:space="preserve">
+    <value>N_m3u8DL-RE (parallel)</value>
+  </data>
+  <data name="Engine_Nm3u8_Description" xml:space="preserve">
+    <value>Use N_m3u8DL-RE to download segments concurrently.</value>
+  </data>
+  
+  <!-- Status Messages -->
+  <data name="Status_Idle" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="Status_Converting" xml:space="preserve">
+    <value>Converting</value>
+  </data>
+  <data name="Status_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="Status_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  
+  <!-- Tooltips and Descriptions -->
+  <data name="Tooltip_M3U8Url" xml:space="preserve">
+    <value>Remote playlist URL (.m3u8)</value>
+  </data>
+  <data name="Tooltip_OutputFile" xml:space="preserve">
+    <value>Destination MP4 path</value>
+  </data>
+  <data name="Tooltip_PasteUrl" xml:space="preserve">
+    <value>Paste URL from clipboard</value>
+  </data>
+  <data name="Tooltip_FfmpegPath" xml:space="preserve">
+    <value>Location of ffmpeg.exe</value>
+  </data>
+  <data name="Tooltip_Nm3u8Path" xml:space="preserve">
+    <value>Location of N_m3u8DL-RE.exe</value>
+  </data>
+  <data name="Tooltip_ThreadCount" xml:space="preserve">
+    <value>Maximum number of segments to download concurrently (1-128).</value>
+  </data>
+  <data name="Tooltip_AggressiveHttp" xml:space="preserve">
+    <value>Adds -multiple_requests 1 and -http_persistent 1 to ffmpeg to reuse HTTP connections.</value>
+  </data>
+  
+  <!-- Info Messages -->
+  <data name="Info_ThreadCountNote" xml:space="preserve">
+    <value>Higher values increase concurrency but may stress the server.</value>
+  </data>
+  <data name="Info_SettingsNote" xml:space="preserve">
+    <value>Note: FFmpeg is required for both download methods. N_m3u8DL-RE path is only needed when using parallel download mode.</value>
+  </data>
+  
+  <!-- Tray Icon -->
+  <data name="TrayIcon_Title" xml:space="preserve">
+    <value>M3U8 to MP4 Converter</value>
+  </data>
+  <data name="TrayIcon_Message" xml:space="preserve">
+    <value>Application is still running in the background. Click the tray icon to restore.</value>
+  </data>
+  <data name="TrayIcon_ShowWindow" xml:space="preserve">
+    <value>Show Window</value>
+  </data>
+  <data name="TrayIcon_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+</root>

@@ -30,7 +30,8 @@ public partial class MainWindow : Window
             new ConversionService(),
             new DialogService(),
             new SettingsService(),
-            new FfmpegLocator());
+            new FfmpegLocator(),
+            new Nm3u8DlReLocator());
 
         DataContext = _viewModel;
 
@@ -46,6 +47,56 @@ public partial class MainWindow : Window
         
         // Handle window closing event
         Closing += OnWindowClosing;
+        
+        // Initialize language
+        InitializeLanguage();
+    }
+
+    private void InitializeLanguage()
+    {
+        var settingsService = new SettingsService();
+        var settings = settingsService.Load();
+        var language = settings.Language ?? "en";
+        
+        LocalizationManager.Instance.SetLanguage(language);
+        
+        // Set ComboBox selection
+        foreach (ComboBoxItem item in LanguageComboBox.Items)
+        {
+            if (item.Tag?.ToString() == language)
+            {
+                LanguageComboBox.SelectedItem = item;
+                break;
+            }
+        }
+    }
+
+    private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (LanguageComboBox.SelectedItem is ComboBoxItem item && item.Tag is string language)
+        {
+            LocalizationManager.Instance.SetLanguage(language);
+            
+            // Save to settings
+            var settingsService = new SettingsService();
+            var settings = settingsService.Load();
+            settings.Language = language;
+            settingsService.Save(settings);
+            
+            // Update UI
+            UpdateUIText();
+        }
+    }
+
+    private void UpdateUIText()
+    {
+        var loc = LocalizationManager.Instance;
+        
+        // Update window title
+        Title = loc["WindowTitle"];
+        
+        // Note: For full localization, you would need to update all text elements
+        // This is a simplified version - full implementation would use binding
     }
 
     private async Task<NativeBridgeResponse> HandleNativeRequestAsync(NativeBridgeRequest request)
@@ -171,7 +222,6 @@ public partial class MainWindow : Window
             logs.CollectionChanged -= OnLogsCollectionChanged;
         }
 
-        _trayIconManager?.Dispose();
         _bridgeServer?.Dispose();
         base.OnClosed(e);
     }

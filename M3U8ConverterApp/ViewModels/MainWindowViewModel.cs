@@ -22,6 +22,7 @@ internal sealed class MainWindowViewModel : BaseViewModel
     private readonly IDialogService _dialogService;
     private readonly ISettingsService _settingsService;
     private readonly IFfmpegLocator _ffmpegLocator;
+    private readonly INm3u8DlReLocator _nm3u8DlReLocator;
     private readonly AppSettings _settings;
 
     private CancellationTokenSource? _conversionCts;
@@ -39,20 +40,23 @@ internal sealed class MainWindowViewModel : BaseViewModel
     private EngineOption _selectedEngineOption;
     private string? _externalTabTitle;
 
-    public MainWindowViewModel(IConversionService conversionService, IDialogService dialogService, ISettingsService settingsService, IFfmpegLocator ffmpegLocator)
+    public MainWindowViewModel(IConversionService conversionService, IDialogService dialogService, ISettingsService settingsService, IFfmpegLocator ffmpegLocator, INm3u8DlReLocator Nm3u8DlReLocator)
     {
         _conversionService = conversionService;
         _dialogService = dialogService;
         _settingsService = settingsService;
         _ffmpegLocator = ffmpegLocator;
+        _nm3u8DlReLocator = Nm3u8DlReLocator;
 
+        var loc = LocalizationManager.Instance;
         EngineOptions = new[]
         {
-            new EngineOption(DownloadEngine.Ffmpeg, "FFmpeg (sequential)", "Use ffmpeg to download sequentially."),
-            new EngineOption(DownloadEngine.Nm3u8DlRe, "N_m3u8DL-RE (parallel)", "Use N_m3u8DL-RE to download segments concurrently.")
+            new EngineOption(DownloadEngine.Ffmpeg, loc["Engine_Ffmpeg_Name"], loc["Engine_Ffmpeg_Description"]),
+            new EngineOption(DownloadEngine.Nm3u8DlRe, loc["Engine_Nm3u8_Name"], loc["Engine_Nm3u8_Description"])
         };
 
         _selectedEngineOption = EngineOptions[0];
+        _statusMessage = loc["Status_Idle"];
 
         Logs = new ObservableCollection<string>();
 
@@ -66,10 +70,37 @@ internal sealed class MainWindowViewModel : BaseViewModel
 
         _settings = _settingsService.Load();
         InitializeFromSettings();
+        
+        // Subscribe to language changes
+        loc.PropertyChanged += (s, e) => UpdateLocalizedStrings();
+    }
+
+    private void UpdateLocalizedStrings()
+    {
+        var loc = LocalizationManager.Instance;
+        
+        // Update engine options
+        var currentEngine = _selectedEngineOption.Engine;
+        EngineOptions = new[]
+        {
+            new EngineOption(DownloadEngine.Ffmpeg, loc["Engine_Ffmpeg_Name"], loc["Engine_Ffmpeg_Description"]),
+            new EngineOption(DownloadEngine.Nm3u8DlRe, loc["Engine_Nm3u8_Name"], loc["Engine_Nm3u8_Description"])
+        };
+        OnPropertyChanged(nameof(EngineOptions));
+        
+        // Restore selection
+        _selectedEngineOption = EngineOptions.First(o => o.Engine == currentEngine);
+        OnPropertyChanged(nameof(SelectedEngineOption));
+        
+        // Update status message if idle
+        if (!IsBusy && _statusMessage == "Idle" || _statusMessage == "Sẵn sàng")
+        {
+            StatusMessage = loc["Status_Idle"];
+        }
     }
 
     public ObservableCollection<string> Logs { get; }
-    public IReadOnlyList<EngineOption> EngineOptions { get; }
+    public IReadOnlyList<EngineOption> EngineOptions { get; private set; }
 
     public ICommand StartCommand { get; }
     public ICommand CancelCommand { get; }
@@ -209,6 +240,9 @@ internal sealed class MainWindowViewModel : BaseViewModel
             : _ffmpegLocator.TryFind() ?? string.Empty;
 
         Nm3u8DlRePath = _settings.Nm3u8DlRePath ?? string.Empty;
+        Nm3u8DlRePath = !string.IsNullOrWhiteSpace(_settings.Nm3u8DlRePath) 
+        ? _settings.Nm3u8DlRePath : _nm3u8DlReLocator.TryFind() ?? string.Empty;
+
         Nm3u8ThreadCount = _settings.Nm3u8ThreadCount > 0 ? _settings.Nm3u8ThreadCount : _nm3u8ThreadCount;
 
         if (!string.IsNullOrWhiteSpace(_settings.LastOutputDirectory))

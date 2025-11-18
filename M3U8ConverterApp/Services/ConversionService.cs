@@ -304,6 +304,17 @@ internal sealed class ConversionService : IConversionService
             WorkingDirectory = downloadDirectory
         };
 
+        // Add FFmpeg directory to PATH so N_m3u8DL-RE can find it for remuxing
+        if (!string.IsNullOrWhiteSpace(request.FfmpegPath) && File.Exists(request.FfmpegPath))
+        {
+            var ffmpegDir = Path.GetDirectoryName(request.FfmpegPath);
+            if (!string.IsNullOrWhiteSpace(ffmpegDir))
+            {
+                var currentPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+                startInfo.Environment["PATH"] = $"{ffmpegDir};{currentPath}";
+            }
+        }
+
         var args = startInfo.ArgumentList;
         args.Add(request.SourceUrl);
         args.Add("--save-dir");
@@ -429,7 +440,7 @@ internal sealed class ConversionService : IConversionService
             CreateNoWindow = true
         };
 
-        startInfo.ArgumentList.Add("-y");
+        startInfo.ArgumentList.Add("-y");       
         startInfo.ArgumentList.Add("-hide_banner");
         startInfo.ArgumentList.Add("-loglevel");
         startInfo.ArgumentList.Add("info");

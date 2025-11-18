@@ -3,30 +3,23 @@ using System.IO;
 
 namespace M3U8ConverterApp.Services;
 
-internal interface IFfmpegLocator
+internal interface INm3u8DlReLocator
 {
     string? TryFind();
 }
 
-internal sealed class FfmpegLocator : IFfmpegLocator
+internal sealed class Nm3u8DlReLocator : INm3u8DlReLocator
 {
     public string? TryFind()
     {
-        // Thử tìm trong folder bin (bundled version với DLLs)
-        var localPathInBin = Path.Combine(AppContext.BaseDirectory, "ffmpeg", "bin", "ffmpeg.exe");
-        if (File.Exists(localPathInBin))
-        {
-            return localPathInBin;
-        }
-
-        // Fallback: tìm trực tiếp trong folder ffmpeg (single exe)
-        var localPath = Path.Combine(AppContext.BaseDirectory, "ffmpeg", "ffmpeg.exe");
+        // 1. Tìm trong folder bundled (AppContext.BaseDirectory/N_m3u8DL-RE/)
+        var localPath = Path.Combine(AppContext.BaseDirectory, "N_m3u8DL-RE", "N_m3u8DL-RE.exe");
         if (File.Exists(localPath))
         {
             return localPath;
         }
 
-        // Tìm trong PATH environment variable
+        // 2. Tìm trong PATH environment variable
         var environmentPath = Environment.GetEnvironmentVariable("PATH");
         if (string.IsNullOrWhiteSpace(environmentPath))
         {
@@ -42,7 +35,7 @@ internal sealed class FfmpegLocator : IFfmpegLocator
                     continue;
                 }
 
-                var candidate = Path.Combine(pathSegment.Trim(), "ffmpeg.exe");
+                var candidate = Path.Combine(pathSegment.Trim(), "N_m3u8DL-RE.exe");
                 if (File.Exists(candidate))
                 {
                     return candidate;
@@ -50,7 +43,6 @@ internal sealed class FfmpegLocator : IFfmpegLocator
             }
             catch
             {
-                // Ignore malformed segments and keep scanning.
             }
         }
 

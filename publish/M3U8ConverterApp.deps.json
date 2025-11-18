@@ -15,6 +15,11 @@
         },
         "runtime": {
           "M3U8ConverterApp.dll": {}
+        },
+        "resources": {
+          "vi/M3U8ConverterApp.resources.dll": {
+            "locale": "vi"
+          }
         }
       },
       "runtimepack.Microsoft.NETCore.App.Runtime.win-x64/8.0.21": {

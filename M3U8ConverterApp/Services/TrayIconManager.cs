@@ -14,10 +14,12 @@ internal sealed class TrayIconManager : IDisposable
     {
         _window = window ?? throw new ArgumentNullException(nameof(window));
         
+        var loc = LocalizationManager.Instance;
+        
         _notifyIcon = new TaskbarIcon
         {
             Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Assets/icon.ico")).Stream),
-            ToolTipText = "M3U8 to MP4 Converter",
+            ToolTipText = loc["TrayIcon_Title"],
             Visibility = Visibility.Collapsed
         };
 
@@ -26,18 +28,33 @@ internal sealed class TrayIconManager : IDisposable
         // Create context menu
         var contextMenu = new System.Windows.Controls.ContextMenu();
         
-        var showMenuItem = new System.Windows.Controls.MenuItem { Header = "Show Window" };
+        var showMenuItem = new System.Windows.Controls.MenuItem { Header = loc["TrayIcon_ShowWindow"] };
         showMenuItem.Click += (s, e) => ShowWindow();
         contextMenu.Items.Add(showMenuItem);
         
         var separator = new System.Windows.Controls.Separator();
         contextMenu.Items.Add(separator);
         
-        var exitMenuItem = new System.Windows.Controls.MenuItem { Header = "Exit" };
+        var exitMenuItem = new System.Windows.Controls.MenuItem { Header = loc["TrayIcon_Exit"] };
         exitMenuItem.Click += (s, e) => ExitApplication();
         contextMenu.Items.Add(exitMenuItem);
         
         _notifyIcon.ContextMenu = contextMenu;
+        
+        // Subscribe to language changes
+        loc.PropertyChanged += (s, e) => UpdateLocalizedStrings();
+    }
+
+    private void UpdateLocalizedStrings()
+    {
+        var loc = LocalizationManager.Instance;
+        _notifyIcon.ToolTipText = loc["TrayIcon_Title"];
+        
+        if (_notifyIcon.ContextMenu != null)
+        {
+            ((System.Windows.Controls.MenuItem)_notifyIcon.ContextMenu.Items[0]).Header = loc["TrayIcon_ShowWindow"];
+            ((System.Windows.Controls.MenuItem)_notifyIcon.ContextMenu.Items[2]).Header = loc["TrayIcon_Exit"];
+        }
     }
 
     public void ShowTrayIcon()
@@ -65,10 +82,11 @@ internal sealed class TrayIconManager : IDisposable
         _window.Hide();
         ShowTrayIcon();
         
+        var loc = LocalizationManager.Instance;
         // Show notification
         _notifyIcon.ShowBalloonTip(
-            "M3U8 to MP4 Converter",
-            "Application is still running in the background. Click the tray icon to restore.",
+            loc["TrayIcon_Title"],
+            loc["TrayIcon_Message"],
             Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
     }
 

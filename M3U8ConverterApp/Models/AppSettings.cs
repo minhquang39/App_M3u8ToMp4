@@ -8,4 +8,5 @@ internal sealed class AppSettings
     public string? Nm3u8DlRePath { get; set; }  
     public DownloadEngine PreferredEngine { get; set; } = DownloadEngine.Ffmpeg;
     public int Nm3u8ThreadCount { get; set; } = 16;
+    public string? Language { get; set; } = "en";
 }

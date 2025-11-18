@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <!-- Window Title -->
+  <data name="WindowTitle" xml:space="preserve">
+    <value>Chuyển đổi M3U8 sang MP4</value>
+  </data>
+  
+  <!-- Tabs -->
+  <data name="Tab_Conversion" xml:space="preserve">
+    <value>Chuyển đổi</value>
+  </data>
+  <data name="Tab_Settings" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
+  
+  <!-- Labels -->
+  <data name="Label_M3U8Url" xml:space="preserve">
+    <value>Đường dẫn M3U8:</value>
+  </data>
+  <data name="Label_OutputFile" xml:space="preserve">
+    <value>File đầu ra:</value>
+  </data>
+  <data name="Label_Downloader" xml:space="preserve">
+    <value>Công nghệ tải:</value>
+  </data>
+  <data name="Label_FfmpegPath" xml:space="preserve">
+    <value>Đường dẫn FFmpeg:</value>
+  </data>
+  <data name="Label_Nm3u8DlRePath" xml:space="preserve">
+    <value>Đường dẫn N_m3u8DL-RE:</value>
+  </data>
+  <data name="Label_ThreadCount" xml:space="preserve">
+    <value>Số luồng tải:</value>
+  </data>
+  <data name="Label_Language" xml:space="preserve">
+    <value>Ngôn ngữ:</value>
+  </data>
+  
+  <!-- Buttons -->
+  <data name="Button_Paste" xml:space="preserve">
+    <value>Dán</value>
+  </data>
+  <data name="Button_Browse" xml:space="preserve">
+    <value>Chọn...</value>
+  </data>
+  <data name="Button_Start" xml:space="preserve">
+    <value>Bắt đầu</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Hủy bỏ</value>
+  </data>
+  <data name="Button_OpenOutputFolder" xml:space="preserve">
+    <value>Mở thư mục đầu ra</value>
+  </data>
+  
+  <!-- Checkboxes -->
+  <data name="Checkbox_AggressiveHttp" xml:space="preserve">
+    <value>HTTP tích cực (kết nối liên tục &amp; yêu cầu đa luồng cho VOD)</value>
+  </data>
+  
+  <!-- GroupBox Headers -->
+  <data name="GroupBox_ActivityLog" xml:space="preserve">
+    <value>Nhật ký hoạt động</value>
+  </data>
+  <data name="GroupBox_FfmpegConfiguration" xml:space="preserve">
+    <value>Cấu hình FFmpeg</value>
+  </data>
+  <data name="GroupBox_Nm3u8Configuration" xml:space="preserve">
+    <value>Cấu hình N_m3u8DL-RE</value>
+  </data>
+  
+  <!-- Engine Options -->
+  <data name="Engine_Ffmpeg_Name" xml:space="preserve">
+    <value>FFmpeg (tải tuần tự)</value>
+  </data>
+  <data name="Engine_Ffmpeg_Description" xml:space="preserve">
+    <value>Sử dụng ffmpeg để tải xuống tuần tự.</value>
+  </data>
+  <data name="Engine_Nm3u8_Name" xml:space="preserve">
+    <value>N_m3u8DL-RE (tải song song)</value>
+  </data>
+  <data name="Engine_Nm3u8_Description" xml:space="preserve">
+    <value>Sử dụng N_m3u8DL-RE để tải các phân đoạn đồng thời.</value>
+  </data>
+  
+  <!-- Status Messages -->
+  <data name="Status_Idle" xml:space="preserve">
+    <value>Sẵn sàng</value>
+  </data>
+  <data name="Status_Converting" xml:space="preserve">
+    <value>Đang chuyển đổi</value>
+  </data>
+  <data name="Status_Cancelled" xml:space="preserve">
+    <value>Đã hủy</value>
+  </data>
+  <data name="Status_Completed" xml:space="preserve">
+    <value>Hoàn thành</value>
+  </data>
+  
+  <!-- Tooltips and Descriptions -->
+  <data name="Tooltip_M3U8Url" xml:space="preserve">
+    <value>URL danh sách phát từ xa (.m3u8)</value>
+  </data>
+  <data name="Tooltip_OutputFile" xml:space="preserve">
+    <value>Đường dẫn file MP4 đầu ra</value>
+  </data>
+  <data name="Tooltip_PasteUrl" xml:space="preserve">
+    <value>Dán URL từ clipboard</value>
+  </data>
+  <data name="Tooltip_FfmpegPath" xml:space="preserve">
+    <value>Vị trí của ffmpeg.exe</value>
+  </data>
+  <data name="Tooltip_Nm3u8Path" xml:space="preserve">
+    <value>Vị trí của N_m3u8DL-RE.exe</value>
+  </data>
+  <data name="Tooltip_ThreadCount" xml:space="preserve">
+    <value>Số lượng phân đoạn tối đa tải cùng lúc (1-128).</value>
+  </data>
+  <data name="Tooltip_AggressiveHttp" xml:space="preserve">
+    <value>Thêm -multiple_requests 1 và -http_persistent 1 vào ffmpeg để tái sử dụng kết nối HTTP.</value>
+  </data>
+  
+  <!-- Info Messages -->
+  <data name="Info_ThreadCountNote" xml:space="preserve">
+    <value>Giá trị cao hơn tăng tốc độ nhưng có thể gây tải cho máy chủ.</value>
+  </data>
+  <data name="Info_SettingsNote" xml:space="preserve">
+    <value>Lưu ý: FFmpeg bắt buộc cho cả hai phương thức tải. Đường dẫn N_m3u8DL-RE chỉ cần thiết khi sử dụng chế độ tải song song.</value>
+  </data>
+  
+  <!-- Tray Icon -->
+  <data name="TrayIcon_Title" xml:space="preserve">
+    <value>Chuyển đổi M3U8 sang MP4</value>
+  </data>
+  <data name="TrayIcon_Message" xml:space="preserve">
+    <value>Ứng dụng vẫn đang chạy trong nền. Nhấp vào biểu tượng khay để khôi phục.</value>
+  </data>
+  <data name="TrayIcon_ShowWindow" xml:space="preserve">
+    <value>Hiển thị cửa sổ</value>
+  </data>
+  <data name="TrayIcon_Exit" xml:space="preserve">
+    <value>Thoát</value>
+  </data>
+</root>
