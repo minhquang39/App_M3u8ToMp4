@@ -18,7 +18,7 @@ internal sealed class TrayIconManager : IDisposable
         
         _notifyIcon = new TaskbarIcon
         {
-            Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Assets/icon.ico")).Stream),
+            Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Assets/logo.ico")).Stream),
             ToolTipText = loc["TrayIcon_Title"],
             Visibility = Visibility.Collapsed
         };

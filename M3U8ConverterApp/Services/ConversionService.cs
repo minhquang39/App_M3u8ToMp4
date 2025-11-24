@@ -161,17 +161,25 @@ internal sealed class ConversionService : IConversionService
         {
             File.Delete(request.OutputFile);
         }
+        var appDataLocal = Environment. GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-        var workingRoot = Path.Combine(Path.GetTempPath(), "M3U8ConverterApp", Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+        var workingRoot = Path.Combine(appDataLocal, "M3U8ConverterApp", "Temp", 
+                                    Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+
         var downloadDirectory = Path.Combine(workingRoot, "download");
-        var tempDirectory = Path.Combine(workingRoot, "tmp");
+        var tempDirectory     = Path.Combine(workingRoot, "tmp");
+
+        // Tạo thư mục cha trước
+        Directory.CreateDirectory(workingRoot);
+
+        // Rồi tạo thư mục con
         Directory.CreateDirectory(downloadDirectory);
         Directory.CreateDirectory(tempDirectory);
 
         try
         {
             var baseName = Path.GetFileNameWithoutExtension(request.OutputFile);
-            var startInfo = BuildNm3u8StartInfo(request, downloadDirectory, tempDirectory, baseName);
+            var startInfo = BuildNm3u8StartInfo(request, workingRoot, downloadDirectory, tempDirectory, baseName);
 
             using var process = new Process
             {
@@ -290,6 +298,7 @@ internal sealed class ConversionService : IConversionService
 
     private static ProcessStartInfo BuildNm3u8StartInfo(
         ConversionRequest request,
+        string workingRoot,
         string downloadDirectory,
         string tempDirectory,
         string baseName)
@@ -301,7 +310,7 @@ internal sealed class ConversionService : IConversionService
             RedirectStandardOutput = true,
             UseShellExecute = false,
             CreateNoWindow = true,
-            WorkingDirectory = downloadDirectory
+            WorkingDirectory = workingRoot  // Set to workingRoot so Logs folder is created here
         };
 
         // Add FFmpeg directory to PATH so N_m3u8DL-RE can find it for remuxing
@@ -323,6 +332,7 @@ internal sealed class ConversionService : IConversionService
         args.Add(tempDirectory);
         args.Add("--save-name");
         args.Add(baseName);
+        args.Add("--no-log");  // Disable log file to avoid permission issues
 
         if (request.Nm3u8ThreadCount.HasValue && request.Nm3u8ThreadCount.Value > 0)
         {

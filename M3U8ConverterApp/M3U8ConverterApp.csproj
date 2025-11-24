@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
-    <ApplicationIcon>..\Assets\icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\Assets\logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,8 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="..\Assets\icon.ico" Link="Assets\icon.ico" />
-    <Resource Include="..\Assets\vtv-digital-logo.png" Link="Assets\vtv-digital-logo.png" />
+    <Resource Include="..\Assets\logo.ico" Link="Assets\logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,14 +47,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Copy toàn bộ FFmpeg bin folder (bao gồm .exe và .dll) -->
     <None Include="tools\ffmpeg\bin\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>ffmpeg\bin\%(RecursiveDir)%(Filename)%(Extension)</Link>
     </None>
 
-    <!-- Copy N_m3u8DL-RE -->
-    <None Include="tools\n-m3u8dl-re\N_m3u8DL-RE.exe" Condition="Exists('tools\n-m3u8dl-re\N_m3u8DL-RE.exe')">
+    <None Include="tools\N_m3u8DL-RE\N_m3u8DL-RE.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>N_m3u8DL-RE\N_m3u8DL-RE.exe</Link>
     </None>

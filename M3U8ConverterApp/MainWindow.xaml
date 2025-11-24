@@ -8,7 +8,7 @@
         Height="600"
         MinWidth="700"
         MinHeight="480"
-        Icon="Assets/icon.ico">
+        Icon="../Assets/logo.ico">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
